@@ -20,7 +20,7 @@ class TopicActivity : AppCompatActivity() {
         val state = (application as QuizApp).state
         val quiz = state.getTopic()
         topicTitle.text = quiz.topic
-        topicDesc.text = quiz.description
+        topicDesc.text = quiz.longDesc
         qNum.text = quiz.questions.size.toString()
         btnBegin.setOnClickListener {
             val intent = Intent(this, QuizActivity::class.java)

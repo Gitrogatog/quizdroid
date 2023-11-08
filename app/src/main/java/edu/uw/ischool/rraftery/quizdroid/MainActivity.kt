@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val quizList : ListView = findViewById(R.id.quizList)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, (application as QuizApp).state.topicSet)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, (application as QuizApp).state.getTopicSet())
         // android.R represents Android's general resources
         quizList.adapter = adapter
 
