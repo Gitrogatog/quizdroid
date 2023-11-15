@@ -2,14 +2,24 @@ package edu.uw.ischool.rraftery.quizdroid
 
 import android.app.Application
 import android.util.Log
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.FileReader
+import java.io.IOException
 
 class QuizApp : Application() {
-    private val topicRepo : ITopicRepository = TopicRepoFromArray(HardcodedQuizSet().getHardcodedTopicSet())
-    val state : QuizState = QuizState(topicRepo)
+    private lateinit var topicRepo : ITopicRepository
+        //TopicRepoFromArray(HardcodedQuizSet().getHardcodedTopicSet())
+    lateinit var state : QuizState
+    var url : String = ""
+    var minutes : Int = 5
 
     override fun onCreate() {
         super.onCreate()
         Log.i("QuizApp", "QuizApp has been created!")
+        topicRepo = TopicRepoFromArray(
+            QuizSetFromJSON(getFilesDir().toString()).getTopicSet("questions.json"))
+        state = QuizState(topicRepo)
     }
 }
 
@@ -39,5 +49,61 @@ class HardcodedQuizSet(){
 
     fun getHardcodedTopicSet() : Array<Topic> {
         return arrayOf<Topic>(MathQuiz, PhysicsQuiz, MarvelQuiz, PokemonQuiz)
+    }
+}
+
+class QuizSetFromJSON(private val filesDir : String){
+    fun getTopicSet(filePath : String) : Array<Topic> {
+        val topicArr : ArrayList<Topic> = ArrayList<Topic>()
+        var jsonArr : JSONArray = JSONArray()
+        try {
+            val messagesReader = FileReader("$filesDir/$filePath")
+            messagesReader.use {
+                val buffer = it.readText()
+                jsonArr = JSONArray(buffer)
+                Log.v("Main Activity", "JSON in assets/ is: $jsonArr")
+
+                // at the end of this block, use() will call
+                // .close() on the FileReader for us
+            }
+        }
+        catch (ioEx : IOException) {
+            // Something went wrong IO-wise, notify the user
+            //Toast.makeText(this, "Error: $ioEx", Toast.LENGTH_LONG).show()
+            Log.v("Main Activity", "JSON ERROR: $ioEx")
+        }
+        for (i in 0..<jsonArr.length()){
+            val item = jsonArr[i]
+            if(item is JSONObject){
+                topicArr.add(getTopicFromJSON(item))
+            }
+        }
+        return topicArr.toTypedArray()
+    }
+    fun getTopicFromJSON(jsonObj : JSONObject) : Topic {
+        var quizArr : ArrayList<Quiz> = ArrayList<Quiz>()
+        var quizJSON = jsonObj["questions"]
+        if(quizJSON is JSONArray){
+            for (i in 0..<quizJSON.length()){
+                val quizObj = quizJSON[i]
+                if(quizObj is JSONObject){
+                    val quiz : Quiz = getQuizFromJSON(quizObj)
+                    quizArr.add(quiz)
+                }
+            }
+        }
+        return Topic(jsonObj["title"] as String, jsonObj["desc"] as String,
+            jsonObj["desc"] as String, quizArr.toTypedArray())
+    }
+    fun getQuizFromJSON(jsonObj : JSONObject) : Quiz {
+        val questionsJSON : JSONArray = jsonObj["answers"] as JSONArray
+        var questions : ArrayList<String> = ArrayList<String>()
+        for(i in 0..<questionsJSON.length()){
+            val question = questionsJSON[i]
+            if(question is String){
+                questions.add(question)
+            }
+        }
+        return Quiz(jsonObj["text"] as String, questions.toTypedArray(), Math.max((jsonObj["answer"] as String).toInt() - 1, 0))
     }
 }

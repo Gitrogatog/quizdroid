@@ -28,6 +28,24 @@ class TopicRepoFromArray(private val topicSet : Array<Topic>) : ITopicRepository
     }
 }
 
+//class TopicRepoFromJSON() : ITopicRepository {
+//    override fun getTopic(topicIndex : Int) : Topic {
+//
+//    }
+//    override fun getTopicSet() : Array<Topic> {
+//
+//    }
+//    override fun getNumQuestions(topicIndex : Int) : Int {
+//
+//    }
+//    override fun hasRemainingQuestions(topicIndex : Int, questionIndex: Int) : Boolean {
+//
+//    }
+//    override fun getQuestion(topicIndex : Int, questionIndex : Int) : Quiz {
+//
+//    }
+//}
+
 class QuizState(val topicRepo : ITopicRepository) {
     var currentTopic : Int = 0
     var scoreArr = IntArray(0)
