@@ -11,6 +11,7 @@ class AnswerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_answer)
+        (application as QuizApp).currentActivity = this
 
         val quizIndex = intent.getIntExtra(QUIZ_INDEX, 0)
         val ansIndex = intent.getIntExtra(ANS_INDEX, 0)

@@ -17,6 +17,8 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preferences)
+        (application as QuizApp).currentActivity = this
+
         val urlInput : EditText = this.findViewById<EditText>(R.id.urlEditText)
         val minutesInput : EditText = this.findViewById<EditText>(R.id.minutesEditText)
         val mainButton : Button = this.findViewById<Button>(R.id.btnMain)

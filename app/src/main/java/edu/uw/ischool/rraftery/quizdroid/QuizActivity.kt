@@ -18,21 +18,15 @@ class QuizActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
+        (application as QuizApp).currentActivity = this
+
         val quizIndex = intent.getIntExtra(QUIZ_INDEX, 0)
         val state = (application as QuizApp).state
         val question : Quiz = state.getQuestion(quizIndex)
 
-//        val btn1 : RadioButton = findViewById(R.id.btnAns1)
-//        val btn2 : RadioButton = findViewById(R.id.btnAns2)
-//        val btn3 : RadioButton = findViewById(R.id.btnAns3)
-//        val btn4 : RadioButton = findViewById(R.id.btnAns4)
         val qText : TextView = findViewById(R.id.questionText)
         submitButton = findViewById(R.id.btnSubmit)
 
-//        btn1.text = question.answers[0]
-//        btn2.text = question.answers[1]
-//        btn3.text = question.answers[2]
-//        btn4.text = question.answers[3]
         qText.text = question.question
         submitButton.isEnabled = false
         submitButton.setOnClickListener {

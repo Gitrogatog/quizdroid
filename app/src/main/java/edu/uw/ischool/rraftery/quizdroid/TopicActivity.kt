@@ -13,6 +13,8 @@ class TopicActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic)
+        (application as QuizApp).currentActivity = this
+
         val topicTitle : TextView = findViewById(R.id.topicTitle)
         val topicDesc : TextView = findViewById(R.id.topicDesc)
         val qNum : TextView = findViewById(R.id.qCount)
